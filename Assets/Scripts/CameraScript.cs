@@ -22,6 +22,11 @@ public class CameraScript : MonoBehaviour
     public bool is2D;
     [Space]
 
+    [Header("Options")]
+    public bool collisionEnabled = true;
+    public bool enableClipping = true;
+    [Space]
+
     [Header("TPS Options")]
     public float offset; // a definir a la place d'une des valeurs de position de la camera pour set la distance avec le joueur
     public float movementSpeed = 5f;
@@ -31,7 +36,8 @@ public class CameraScript : MonoBehaviour
     [Header("FPS Options")]
     [Range(30, 100)]
     public float FOV;
-    public float Zoom = 10f;
+    public float defaultZoom = 10f;
+    private bool isZoomed = false;
     [Space]
 
     [Header("2D Options")]
@@ -44,6 +50,10 @@ public class CameraScript : MonoBehaviour
         isTPS = true;
         iSFPS = false;
         iS2D = false;
+
+        FOV = CameraFPS.main.fieldOfView;
+        //FOV = Camera.main.fieldOfView;
+        defaultZoom = Zoom;
     }
 
     void Update()
@@ -59,6 +69,9 @@ public class CameraScript : MonoBehaviour
             CameraTPS.SetActive(false);
             CameraFPS.SetActive(true);
             Camera2D.SetActive(false);
+
+            CameraFPS.main.fieldOfView = FOV;
+            //Camera.main.fieldOfView = FOV;
         }
         else if(!is2D) 
         {
@@ -66,6 +79,21 @@ public class CameraScript : MonoBehaviour
             CameraFPS.SetActive(false);
             Camera2D.SetActive(true);
         }
+
+        if (collisionEnabled)
+        {
+            HandleCameraCollision();
+        }
+
+        if (isFPS && Input.GetKey(KeyCode.E))
+        {
+            isZoomed = true; 
+        }
+        else
+        {
+            isZoomed = false; 
+        }
+
     }
 
     public void TPSSwitch()
@@ -81,6 +109,9 @@ public class CameraScript : MonoBehaviour
         isTPS = false;
         iSFPS = true;
         iS2D = false;
+
+        CameraFPS.main.fieldOfView = FOV;
+        //Camera.main.fieldOfView = FOV;
     }
 
     public void 2DSwitch()
@@ -89,5 +120,41 @@ public class CameraScript : MonoBehaviour
         iSFPS = false;
         iS2D = true;
     }
+
+    void HandleFreeLook()
+    {
+        if (isTPS) // Free look TPS 
+        {
+            float mouseX = Input.GetAxis("Mouse X");
+            float mouseY = Input.GetAxis("Mouse Y");
+
+            // rotation horizontale joueur
+            target.transform.Rotate(Vector3.up * mouseX * rotationSpeed);
+
+            // rotation verticale  joueur (limiter l'angle vertical entre -90 et 90 degrés)
+            float newRotationX = Mathf.Clamp(target.transform.eulerAngles.x - mouseY * rotationSpeed, -90f, 90f);
+            target.transform.eulerAngles = new Vector3(newRotationX, target.transform.eulerAngles.y, 0f);
+        }
+    }
+
+    void HandleCameraCollision()
+    {
+        if (enableClipping)
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(target.position, -transform.forward, out hit, collisionAvoidanceRadius))
+            {
+                transform.position = hit.point + transform.forward * clippingDistance;
+            }
+        }
+    }
+
+
+    public void ToggleCollisionSystem()
+    {
+        collisionEnabled = !collisionEnabled;
+    }
+
+
 }
 

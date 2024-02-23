@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     private float currentSpeed;
     public float rotationSpeed = 40;
     private Vector2 direction;
+    public float zoomRunning;
 
     void Start() 
     {
@@ -59,12 +60,14 @@ public class PlayerController : MonoBehaviour
             speed = runningSpeed;
             Debug.Log(speed);
             // ajouter le zoom de camera pendant la course
+            // CameraTPS.offset = CameraTPS.offset - zoomRunning;
         }
         else if (context.canceled) 
         {
             speed = currentSpeed;
             Debug.Log(speed);
             // enlever le zoom de camera pendant la course
+            // CameraTPS.offset = CameraTPS.offset + zoomRunning;
         }
     }
 }
