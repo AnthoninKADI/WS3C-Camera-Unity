@@ -14,9 +14,9 @@ public class CameraScript : MonoBehaviour
     */
 
     [Header("Camera Reference")]
-    public Gameobject CameraTPS;
-    public Gameobject CameraFPS;
-    //public Gameobject Camera2D;
+    public GameObject CameraTPS;
+    public GameObject CameraFPS;
+    //public GameObject Camera2D;
     public bool isTPS; 
     public bool iSFPS; 
     public bool is2D;
@@ -25,10 +25,13 @@ public class CameraScript : MonoBehaviour
     [Header("Options")]
     public bool collisionEnabled = true;
     public bool enableClipping = true;
+    private float collisionAvoidanceRadius = 1f;
+    private float clippingDistance = 0.1f;
     [Space]
 
     [Header("TPS Options")]
-    public float offset; // a definir a la place d'une des valeurs de position de la camera pour set la distance avec le joueur
+    [SerializeField]
+    private float _offset;
     public float movementSpeed = 5f;
     public float rotationSpeed = 2f;
     [Space]
@@ -142,7 +145,7 @@ public class CameraScript : MonoBehaviour
         if (enableClipping)
         {
             RaycastHit hit;
-            if (Physics.Raycast(target.position, -transform.forward, out hit, collisionAvoidanceRadius))
+            if (Physics.Raycast(transform.position, -transform.forward, out hit, collisionAvoidanceRadius))
             {
                 transform.position = hit.point + transform.forward * clippingDistance;
             }
@@ -155,6 +158,17 @@ public class CameraScript : MonoBehaviour
         collisionEnabled = !collisionEnabled;
     }
 
-
+    public float Offset
+    {
+        get { return _offset; }
+        set
+        {
+            _offset = value;
+            if (isTPS)
+            {
+                CameraTPS.transform.position = new Vector3(0, 0, _offset);
+            }
+        }
+    }
 }
 
