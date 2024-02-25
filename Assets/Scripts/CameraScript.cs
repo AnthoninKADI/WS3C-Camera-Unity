@@ -4,21 +4,13 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    /* 
-        public float collisionAvoidanceRadius = 1f; // Le rayon pour éviter les collisions avec des objets
-        public float clippingDistance = 0.1f; // La distance de clipping pour éviter les intersections avec des objets
-
-        private Vector3 desiredPosition;
-        private Vector3 smoothedPosition;
-        private Vector3 rotationEulerAngles;
-    */
-
     [Header("Camera Reference")]
+    public GameObject target;
     public GameObject CameraTPS;
     public GameObject CameraFPS;
-    //public GameObject Camera2D;
+    public GameObject Camera2D;
     public bool isTPS; 
-    public bool iSFPS; 
+    public bool isFPS; 
     public bool is2D;
     [Space]
 
@@ -40,22 +32,17 @@ public class CameraScript : MonoBehaviour
     [Range(30, 100)]
     public float FOV;
     public float defaultZoom = 10f;
+    public float Zoom;
     private bool isZoomed = false;
-    [Space]
-
-    [Header("2D Options")]
-    public float smoothing = 0.1f; // La douceur du suivi
-    [Space]
-
 
     void Start()
     {
         isTPS = true;
-        iSFPS = false;
-        iS2D = false;
+        isFPS = false;
+        is2D = false;
 
-        FOV = CameraFPS.main.fieldOfView;
-        //FOV = Camera.main.fieldOfView;
+        //FOV = CameraFPS.main.fieldOfView;
+        FOV = Camera.main.fieldOfView;
         defaultZoom = Zoom;
     }
 
@@ -67,14 +54,14 @@ public class CameraScript : MonoBehaviour
             CameraFPS.SetActive(false);
             Camera2D.SetActive(false);
         }
-        else if (iSFPS) 
+        else if (isFPS) 
         {
             CameraTPS.SetActive(false);
             CameraFPS.SetActive(true);
             Camera2D.SetActive(false);
 
-            CameraFPS.main.fieldOfView = FOV;
-            //Camera.main.fieldOfView = FOV;
+            //CameraFPS.main.fieldOfView = FOV;
+            Camera.main.fieldOfView = FOV;
         }
         else if(!is2D) 
         {
@@ -102,26 +89,26 @@ public class CameraScript : MonoBehaviour
     public void TPSSwitch()
     {
         isTPS = true;
-        iSFPS = false;
-        iS2D = false;
-        CameraTPS.transform = { 0, 0, offset };
+        isFPS = false;
+        is2D = false;
+        //CameraTPS.transform = { 0, 0, offset };
     }
     
     public void FPSSwitch()
     {
         isTPS = false;
-        iSFPS = true;
-        iS2D = false;
+        isFPS = true;
+        is2D = false;
 
-        CameraFPS.main.fieldOfView = FOV;
-        //Camera.main.fieldOfView = FOV;
+        //CameraFPS.main.fieldOfView = FOV;
+        Camera.main.fieldOfView = FOV;
     }
 
-    public void 2DSwitch()
+    public void Switch2D()
     {
         isTPS = false;
-        iSFPS = false;
-        iS2D = true;
+        isFPS = false;
+        is2D = true;
     }
 
     void HandleFreeLook()
@@ -134,7 +121,7 @@ public class CameraScript : MonoBehaviour
             // rotation horizontale joueur
             target.transform.Rotate(Vector3.up * mouseX * rotationSpeed);
 
-            // rotation verticale  joueur (limiter l'angle vertical entre -90 et 90 degrés)
+            // rotation verticale  joueur (limiter l'angle vertical entre -90 et 90 degrï¿½s)
             float newRotationX = Mathf.Clamp(target.transform.eulerAngles.x - mouseY * rotationSpeed, -90f, 90f);
             target.transform.eulerAngles = new Vector3(newRotationX, target.transform.eulerAngles.y, 0f);
         }

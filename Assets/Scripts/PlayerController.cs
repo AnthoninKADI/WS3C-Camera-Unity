@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     private Vector2 direction;
     public float zoomRunning;
 
+    public CameraScript cameraScript;
+
     void Start() 
     {
         currentSpeed = speed;
@@ -27,6 +29,11 @@ public class PlayerController : MonoBehaviour
     public void move(InputAction.CallbackContext context)
     {
         direction = context.ReadValue<Vector2>();
+
+        if (cameraScript.is2D)
+        {
+            direction.x = 0;
+        }
     }
 
     public void SwitchTPS(InputAction.CallbackContext context)

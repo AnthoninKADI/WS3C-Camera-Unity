@@ -14,7 +14,7 @@ public class Camera2DFollow : MonoBehaviour
     {
         if (player == null)
         {
-            Debug.LogError("pas de joueur défini");
+            Debug.LogError("pas de joueur defini");
         }
     }
 
@@ -22,7 +22,7 @@ public class Camera2DFollow : MonoBehaviour
     {
         if (player != null)
         {
-            // Appliquer le délai avant de commencer à suivre
+            // Appliquer le delai avant de commencer a suivre
             if (followDelay > 0f)
             {
                 followDelay -= Time.deltaTime;
