@@ -50,20 +50,20 @@ public class CameraScript : MonoBehaviour
     {
         if (isTPS) 
         {
-            CameraTPS.SetActive(true);
-            CameraFPS.SetActive(false);
-            Camera2D.SetActive(false);
+            CameraTPS.SetActive(isTPS);
+            CameraFPS.SetActive(isFPS);
+            Camera2D.SetActive(is2D);
         }
         else if (isFPS) 
         {
             CameraTPS.SetActive(false);
-            CameraFPS.SetActive(true);
+            CameraFPS.SetActive(isFPS);
             Camera2D.SetActive(false);
 
             //CameraFPS.main.fieldOfView = FOV;
             Camera.main.fieldOfView = FOV;
         }
-        else if(!is2D) 
+        else if(is2D) 
         {
             CameraTPS.SetActive(false);
             CameraFPS.SetActive(false);
@@ -121,7 +121,6 @@ public class CameraScript : MonoBehaviour
             // rotation horizontale joueur
             target.transform.Rotate(Vector3.up * mouseX * rotationSpeed);
 
-            // rotation verticale  joueur (limiter l'angle vertical entre -90 et 90 degr�s)
             float newRotationX = Mathf.Clamp(target.transform.eulerAngles.x - mouseY * rotationSpeed, -90f, 90f);
             target.transform.eulerAngles = new Vector3(newRotationX, target.transform.eulerAngles.y, 0f);
         }
@@ -155,6 +154,15 @@ public class CameraScript : MonoBehaviour
             {
                 CameraTPS.transform.position = new Vector3(0, 0, _offset);
             }
+        }
+    }
+
+    public void ZoomIn(float zoomAmount)
+    {
+        if (isTPS)
+        {
+            _offset -= zoomAmount;
+            CameraTPS.transform.position = new Vector3(0, 0, _offset);
         }
     }
 }
