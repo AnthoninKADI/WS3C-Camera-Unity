@@ -155,8 +155,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Zoom true");
             if (cameraScript.isFPS)
             {
-                cameraScript.isZoomed = true;
-                cameraScript.ZoomIn(cameraScript.Zoom); 
+                cameraScript.FOV = cameraScript.Zoom;
             }
         }
         else if (context.canceled)
@@ -164,9 +163,10 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Zoom false");
             if (cameraScript.isFPS)
             {
-                cameraScript.isZoomed = false;
-                cameraScript.ZoomIn(-cameraScript.Zoom); 
+                cameraScript.FOV = cameraScript.defaultFOV;
             }
         }
+
     }
+
 }

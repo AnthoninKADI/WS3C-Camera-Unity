@@ -1391,6 +1391,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 830d9af1-11a6-4680-983a-bb174d920ae2
     m_ActionName: Player/FreeLook[/Keyboard/r,/XInputControllerWindows/buttonWest]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1619107065}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: Zoom
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 3d572941-6e7f-42f1-b618-387c65a58518
+    m_ActionName: Player/New action
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -1437,9 +1453,10 @@ MonoBehaviour:
   _offset: 10
   movementSpeed: 5
   rotationSpeed: 2
-  FOV: 30
-  defaultZoom: 10
-  Zoom: 0
+  FOV: 60
+  Zoom: 10
+  isZoomed: 0
+  defaultFOV: 0
 --- !u!1 &1774484455
 GameObject:
   m_ObjectHideFlags: 0

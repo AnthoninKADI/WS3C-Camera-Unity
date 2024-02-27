@@ -33,9 +33,12 @@ public class CameraScript : MonoBehaviour
     [Header("FPS Options")]
     [Range(30, 100)]
     public float FOV;
-    public float defaultZoom = 10f;
+    [Range(0, 20)]
     public float Zoom;
     public bool isZoomed = false;
+
+    [Header("Don't Touch")]
+    public float defaultFOV;
 
     void Start()
     {
@@ -45,8 +48,8 @@ public class CameraScript : MonoBehaviour
         is2D = false;
         
         defaultOffset = _offset;
+        defaultFOV = FOV;
         FOV = Camera.main.fieldOfView;
-        defaultZoom = Zoom;
 
         UpdateCameraPosition();
     }
@@ -157,14 +160,14 @@ public class CameraScript : MonoBehaviour
     public void ZoomIn(float zoomAmount)
     {
         if (isTPS)
-        {           
+        {
             _offset -= zoomAmount;
             CameraTPS.transform.position = new Vector3(0, 0, _offset);
         }
-        else if (isFPS && isZoomed)  
+        else if (isFPS && isZoomed)
         {
-            Zoom += zoomAmount;
-            Camera.main.fieldOfView = FOV + Zoom;
+            FOV = Mathf.Clamp(FOV - zoomAmount, float.NegativeInfinity, 100f);
+            Camera.main.fieldOfView = FOV;
         }
     }
 
