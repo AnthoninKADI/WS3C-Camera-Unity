@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.GraphicsBuffer;
 
 public class PlayerController : MonoBehaviour
 {
@@ -31,7 +32,11 @@ public class PlayerController : MonoBehaviour
         {
             RotateWithMouse();
         }
-        else
+        if (!isFreeLookEnabled && cameraScript.isFPS)
+        {
+            MoveWithKeys();
+        }
+        else 
         {
             MoveWithKeys();
         }
@@ -48,16 +53,29 @@ public class PlayerController : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
-        // Rotation horizontale du joueur
+        // Rotation horizontale du joueur, même en mode FPS
         transform.Rotate(Vector3.up * mouseX * rotationSpeed * Time.deltaTime);
 
-        // Rotation verticale du joueur
-        transform.Rotate(Vector3.left * mouseY * rotationSpeed * Time.deltaTime);
+        if (!cameraScript.isFPS) // Appliquez la rotation verticale uniquement en dehors du mode FPS
+        {
+            // Rotation verticale du joueur (limiter l'angle vertical entre -90 et 90 degrés)
+            float newRotationX = Mathf.Clamp(transform.eulerAngles.x - mouseY * rotationSpeed * Time.deltaTime, -90f, 90f);
+            transform.eulerAngles = new Vector3(newRotationX, transform.eulerAngles.y, 0f);
+        }
     }
     void MoveWithKeys()
     {
+        if (!cameraScript.isFPS) // Mode TPS, tourner la caméra avec Q et D
+        {
+            transform.Rotate(0, rotationSpeed * Time.deltaTime * direction.x, 0);
+        }
+        else // Mode FPS, déplacer le joueur latéralement avec Q et D
+        {
+            transform.position += transform.right * (speed * Time.deltaTime * direction.x);
+        }
+
+        // Déplacement avant/arrière (commun aux deux modes)
         transform.position += transform.forward * (speed * Time.deltaTime * direction.y);
-        transform.Rotate(0, rotationSpeed * Time.deltaTime * direction.x, 0);
     }
 
     public void move(InputAction.CallbackContext context)
