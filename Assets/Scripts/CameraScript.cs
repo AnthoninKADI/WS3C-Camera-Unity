@@ -14,6 +14,13 @@ public class CameraScript : MonoBehaviour
     public bool is2D;
     [Space]
 
+    [Header("Canvas Reference")]
+    public GameObject InputTPS;
+    public GameObject InputFPS;
+    public GameObject Input2D;
+    public GameObject ArmFPS;
+    [Space]
+
     [Header("Options")]
     public bool collisionEnabled = true;
     public bool enableClipping = true;
@@ -60,12 +67,23 @@ public class CameraScript : MonoBehaviour
             CameraTPS.SetActive(true);
             CameraFPS.SetActive(false);
             Camera2D.SetActive(false);
+
+            InputTPS.SetActive(true);
+            InputFPS.SetActive(false);
+            Input2D.SetActive(false);
+            ArmFPS.SetActive(false);
+ 
         }
         else if (isFPS) 
         {
             CameraTPS.SetActive(false);
             CameraFPS.SetActive(true);
             Camera2D.SetActive(false);
+
+            InputTPS.SetActive(false);
+            InputFPS.SetActive(true);
+            Input2D.SetActive(false);
+            ArmFPS.SetActive(true);
 
             Camera.main.fieldOfView = FOV;
         }
@@ -74,6 +92,11 @@ public class CameraScript : MonoBehaviour
             CameraTPS.SetActive(false);
             CameraFPS.SetActive(false);
             Camera2D.SetActive(true);
+
+            InputTPS.SetActive(false);
+            InputFPS.SetActive(false);
+            Input2D.SetActive(true);
+            ArmFPS.SetActive(false);
         }
 
         if (collisionEnabled)
