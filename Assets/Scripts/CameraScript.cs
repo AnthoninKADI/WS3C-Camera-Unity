@@ -17,6 +17,7 @@ public class CameraScript : MonoBehaviour
     [Header("Options")]
     public bool collisionEnabled = true;
     public bool enableClipping = true;
+    private bool isFreeLook = false;
     private float collisionAvoidanceRadius = 1f;
     private float clippingDistance = 0.1f;
     [Space]
@@ -50,14 +51,14 @@ public class CameraScript : MonoBehaviour
     {
         if (isTPS) 
         {
-            CameraTPS.SetActive(isTPS);
-            CameraFPS.SetActive(isFPS);
-            Camera2D.SetActive(is2D);
+            CameraTPS.SetActive(true);
+            CameraFPS.SetActive(false);
+            Camera2D.SetActive(false);
         }
         else if (isFPS) 
         {
             CameraTPS.SetActive(false);
-            CameraFPS.SetActive(isFPS);
+            CameraFPS.SetActive(true);
             Camera2D.SetActive(false);
 
             //CameraFPS.main.fieldOfView = FOV;
@@ -111,18 +112,25 @@ public class CameraScript : MonoBehaviour
         is2D = true;
     }
 
-    void HandleFreeLook()
+    public bool IsFreeLook
     {
-        if (isTPS) // Free look TPS 
+        get { return isFreeLook; }
+    }
+
+    public void HandleFreeLook()
+    {
+        if (isTPS) // Free look TPS
         {
-            float mouseX = Input.GetAxis("Mouse X");
-            float mouseY = Input.GetAxis("Mouse Y");
+            float mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
 
-            // rotation horizontale joueur
-            target.transform.Rotate(Vector3.up * mouseX * rotationSpeed);
-
-            float newRotationX = Mathf.Clamp(target.transform.eulerAngles.x - mouseY * rotationSpeed, -90f, 90f);
-            target.transform.eulerAngles = new Vector3(newRotationX, target.transform.eulerAngles.y, 0f);
+            // Rotation horizontale de la caméra autour du joueur
+            target.transform.Rotate(Vector3.up * mouseX);
+            isFreeLook = true;
+        }
+        else
+        {
+            // Indiquer que le free look est désactivé
+            isFreeLook = false;
         }
     }
 
@@ -144,6 +152,7 @@ public class CameraScript : MonoBehaviour
         collisionEnabled = !collisionEnabled;
     }
 
+    
     public float Offset
     {
         get { return _offset; }
@@ -156,7 +165,7 @@ public class CameraScript : MonoBehaviour
             }
         }
     }
-
+    
     public void ZoomIn(float zoomAmount)
     {
         if (isTPS)
@@ -165,5 +174,6 @@ public class CameraScript : MonoBehaviour
             CameraTPS.transform.position = new Vector3(0, 0, _offset);
         }
     }
+    
 }
 

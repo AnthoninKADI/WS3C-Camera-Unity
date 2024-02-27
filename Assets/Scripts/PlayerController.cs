@@ -16,6 +16,9 @@ public class PlayerController : MonoBehaviour
 
     public CameraScript cameraScript;
 
+    private bool hasZoomed = false;
+    private bool isFreeLookEnabled = false;
+
     void Start() 
     {
         currentSpeed = speed;
@@ -32,6 +35,12 @@ public class PlayerController : MonoBehaviour
         {
             MoveWithKeys();
         }
+
+        if (isFreeLookEnabled && cameraScript.isTPS)
+        {
+            cameraScript.HandleFreeLook();
+        }
+
     }
 
     void RotateWithMouse()
@@ -42,9 +51,8 @@ public class PlayerController : MonoBehaviour
         // Rotation horizontale du joueur
         transform.Rotate(Vector3.up * mouseX * rotationSpeed * Time.deltaTime);
 
-        // Rotation verticale du joueur (limiter l'angle vertical entre -90 et 90 degrés)
-        float newRotationX = Mathf.Clamp(transform.eulerAngles.x - mouseY * rotationSpeed * Time.deltaTime, -90f, 90f);
-        transform.eulerAngles = new Vector3(newRotationX, transform.eulerAngles.y, 0f);
+        // Rotation verticale du joueur
+        transform.Rotate(Vector3.left * mouseY * rotationSpeed * Time.deltaTime);
     }
     void MoveWithKeys()
     {
@@ -66,7 +74,8 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed) 
         {
-            cameraScript.isTPS = true;
+            cameraScript.TPSSwitch();
+            hasZoomed = false;
         }
     }
 
@@ -74,8 +83,12 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            cameraScript.isFPS = true;
-            movementEnabled = !movementEnabled;
+            if (context.performed)
+            {
+                cameraScript.FPSSwitch();
+                movementEnabled = !movementEnabled;
+                hasZoomed = false;
+            }
         }
     }
 
@@ -83,7 +96,8 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            cameraScript.is2D = true;
+            cameraScript.Switch2D();
+            hasZoomed = false;
         }
     }
 
@@ -94,12 +108,27 @@ public class PlayerController : MonoBehaviour
             speed = runningSpeed;
             Debug.Log("Running true");
             cameraScript.ZoomIn(zoomRunning);
+            hasZoomed = false;
         }
         else if (context.canceled) 
         {
             speed = currentSpeed;
             Debug.Log("running false");
             cameraScript.ZoomIn(-zoomRunning);
+        }
+    }
+
+    public void FreeLook(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Debug.Log("Running true");
+            isFreeLookEnabled = true;
+        }
+        else if (context.canceled)
+        {
+            Debug.Log("running false");
+            isFreeLookEnabled = false;
         }
     }
 }
