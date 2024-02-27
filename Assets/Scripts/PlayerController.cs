@@ -122,12 +122,12 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started)
         {
-            Debug.Log("Running true");
+            Debug.Log("Free Look true");
             isFreeLookEnabled = true;
         }
         else if (context.canceled)
         {
-            Debug.Log("running false");
+            Debug.Log("Free Look false");
             isFreeLookEnabled = false;
         }
     }

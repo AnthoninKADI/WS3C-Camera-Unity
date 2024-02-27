@@ -25,6 +25,7 @@ public class CameraScript : MonoBehaviour
     [Header("TPS Options")]
     [SerializeField]
     private float _offset;
+    private float defaultOffset;
     public float movementSpeed = 5f;
     public float rotationSpeed = 2f;
     [Space]
@@ -38,13 +39,18 @@ public class CameraScript : MonoBehaviour
 
     void Start()
     {
+        
         isTPS = true;
         isFPS = false;
         is2D = false;
+        
 
         //FOV = CameraFPS.main.fieldOfView;
+        defaultOffset = _offset;
         FOV = Camera.main.fieldOfView;
         defaultZoom = Zoom;
+
+        UpdateCameraPosition();
     }
 
     void Update()
@@ -92,6 +98,8 @@ public class CameraScript : MonoBehaviour
         isTPS = true;
         isFPS = false;
         is2D = false;
+        _offset = defaultOffset;
+        UpdateCameraPosition();
         //CameraTPS.transform = { 0, 0, offset };
     }
     
@@ -152,20 +160,17 @@ public class CameraScript : MonoBehaviour
         collisionEnabled = !collisionEnabled;
     }
 
-    
+
     public float Offset
     {
         get { return _offset; }
         set
         {
             _offset = value;
-            if (isTPS)
-            {
-                CameraTPS.transform.position = new Vector3(0, 0, _offset);
-            }
+            UpdateCameraPosition();
         }
     }
-    
+
     public void ZoomIn(float zoomAmount)
     {
         if (isTPS)
@@ -174,6 +179,14 @@ public class CameraScript : MonoBehaviour
             CameraTPS.transform.position = new Vector3(0, 0, _offset);
         }
     }
-    
+
+    private void UpdateCameraPosition()
+    {
+        if (isTPS)
+        {
+            CameraTPS.transform.localPosition = new Vector3(0, 2.66f, -_offset);
+        }
+    }
+
 }
 
