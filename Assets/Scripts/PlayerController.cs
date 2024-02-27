@@ -53,28 +53,26 @@ public class PlayerController : MonoBehaviour
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
-        // Rotation horizontale du joueur, même en mode FPS
         transform.Rotate(Vector3.up * mouseX * rotationSpeed * Time.deltaTime);
 
-        if (!cameraScript.isFPS) // Appliquez la rotation verticale uniquement en dehors du mode FPS
+        if (!cameraScript.isFPS) 
         {
-            // Rotation verticale du joueur (limiter l'angle vertical entre -90 et 90 degrés)
+            
             float newRotationX = Mathf.Clamp(transform.eulerAngles.x - mouseY * rotationSpeed * Time.deltaTime, -90f, 90f);
             transform.eulerAngles = new Vector3(newRotationX, transform.eulerAngles.y, 0f);
         }
     }
     void MoveWithKeys()
     {
-        if (!cameraScript.isFPS) // Mode TPS, tourner la caméra avec Q et D
+        if (!cameraScript.isFPS) 
         {
             transform.Rotate(0, rotationSpeed * Time.deltaTime * direction.x, 0);
         }
-        else // Mode FPS, déplacer le joueur latéralement avec Q et D
+        else 
         {
             transform.position += transform.right * (speed * Time.deltaTime * direction.x);
         }
 
-        // Déplacement avant/arrière (commun aux deux modes)
         transform.position += transform.forward * (speed * Time.deltaTime * direction.y);
     }
 
@@ -131,7 +129,7 @@ public class PlayerController : MonoBehaviour
         else if (context.canceled) 
         {
             speed = currentSpeed;
-            Debug.Log("running false");
+            Debug.Log("Running false");
             cameraScript.ZoomIn(-zoomRunning);
         }
     }
@@ -147,6 +145,28 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("Free Look false");
             isFreeLookEnabled = false;
+        }
+    }
+
+    public void Zoom(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            Debug.Log("Zoom true");
+            if (cameraScript.isFPS)
+            {
+                cameraScript.isZoomed = true;
+                cameraScript.ZoomIn(cameraScript.Zoom); 
+            }
+        }
+        else if (context.canceled)
+        {
+            Debug.Log("Zoom false");
+            if (cameraScript.isFPS)
+            {
+                cameraScript.isZoomed = false;
+                cameraScript.ZoomIn(-cameraScript.Zoom); 
+            }
         }
     }
 }

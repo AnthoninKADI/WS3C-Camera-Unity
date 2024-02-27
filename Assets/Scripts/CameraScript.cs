@@ -35,7 +35,7 @@ public class CameraScript : MonoBehaviour
     public float FOV;
     public float defaultZoom = 10f;
     public float Zoom;
-    private bool isZoomed = false;
+    public bool isZoomed = false;
 
     void Start()
     {
@@ -44,8 +44,6 @@ public class CameraScript : MonoBehaviour
         isFPS = false;
         is2D = false;
         
-
-        //FOV = CameraFPS.main.fieldOfView;
         defaultOffset = _offset;
         FOV = Camera.main.fieldOfView;
         defaultZoom = Zoom;
@@ -67,7 +65,6 @@ public class CameraScript : MonoBehaviour
             CameraFPS.SetActive(true);
             Camera2D.SetActive(false);
 
-            //CameraFPS.main.fieldOfView = FOV;
             Camera.main.fieldOfView = FOV;
         }
         else if(is2D) 
@@ -81,16 +78,6 @@ public class CameraScript : MonoBehaviour
         {
             HandleCameraCollision();
         }
-
-        if (isFPS && Input.GetKey(KeyCode.E))
-        {
-            isZoomed = true; 
-        }
-        else
-        {
-            isZoomed = false; 
-        }
-
     }
 
     public void TPSSwitch()
@@ -99,8 +86,7 @@ public class CameraScript : MonoBehaviour
         isFPS = false;
         is2D = false;
         _offset = defaultOffset;
-        UpdateCameraPosition();
-        //CameraTPS.transform = { 0, 0, offset };
+        UpdateCameraPosition();  
     }
     
     public void FPSSwitch()
@@ -109,7 +95,6 @@ public class CameraScript : MonoBehaviour
         isFPS = true;
         is2D = false;
 
-        //CameraFPS.main.fieldOfView = FOV;
         Camera.main.fieldOfView = FOV;
     }
 
@@ -127,17 +112,15 @@ public class CameraScript : MonoBehaviour
 
     public void HandleFreeLook()
     {
-        if (isTPS) // Free look TPS
+        if (isTPS) 
         {
             float mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
 
-            // Rotation horizontale de la caméra autour du joueur
             target.transform.Rotate(Vector3.up * mouseX);
             isFreeLook = true;
         }
         else
         {
-            // Indiquer que le free look est désactivé
             isFreeLook = false;
         }
     }
@@ -174,9 +157,14 @@ public class CameraScript : MonoBehaviour
     public void ZoomIn(float zoomAmount)
     {
         if (isTPS)
-        {
+        {           
             _offset -= zoomAmount;
             CameraTPS.transform.position = new Vector3(0, 0, _offset);
+        }
+        else if (isFPS && isZoomed)  
+        {
+            Zoom += zoomAmount;
+            Camera.main.fieldOfView = FOV + Zoom;
         }
     }
 
