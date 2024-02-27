@@ -23,8 +23,7 @@ public class CameraScript : MonoBehaviour
     [Space]
 
     [Header("TPS Options")]
-    [SerializeField]
-    private float _offset;
+    public float _offset;
     private float defaultOffset;
     public float movementSpeed = 5f;
     public float rotationSpeed = 2f;

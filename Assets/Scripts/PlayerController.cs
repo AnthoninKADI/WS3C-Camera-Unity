@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private float currentSpeed;
     public float rotationSpeed = 40;
     private Vector2 direction;
+    [Range(0, 10)]
     public float zoomRunning;
     public float mouseSensitivity = 2f; 
     private bool movementEnabled = true;
@@ -123,14 +124,13 @@ public class PlayerController : MonoBehaviour
         {
             speed = runningSpeed;
             Debug.Log("Running true");
-            cameraScript.ZoomIn(zoomRunning);
-            hasZoomed = false;
+            cameraScript.CameraTPS.transform.localPosition = new Vector3(0, 2.66f, - cameraScript._offset + zoomRunning);
         }
         else if (context.canceled) 
         {
             speed = currentSpeed;
             Debug.Log("Running false");
-            cameraScript.ZoomIn(-zoomRunning);
+            cameraScript.CameraTPS.transform.localPosition = new Vector3(0, 2.66f, -cameraScript._offset - zoomRunning);
         }
     }
 

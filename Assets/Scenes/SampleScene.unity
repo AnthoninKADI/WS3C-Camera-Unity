@@ -1426,7 +1426,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 8
   rotationSpeed: 150
-  zoomRunning: 10
+  zoomRunning: 2
   mouseSensitivity: 1
   cameraScript: {fileID: 1619107067}
 --- !u!114 &1619107067
